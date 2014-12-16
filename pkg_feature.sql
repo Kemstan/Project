@@ -16,13 +16,20 @@ PACKAGE BODY PKG_FEATURE AS
 
   PROCEDURE p_add_pending_approval(ip_feature IN T_FEATURE) AS
     v_state   T_STATE;
-  BEGIN	 
+  BEGIN  
     /* **********************************************
      THE PLACE FOR CHECKS WHICH THROW EXCEPTIONS
      ********************************************** */
-    IF FALSE THEN
-      RAISE NO_DATA_FOUND;
-    END IF;
+   IF SQL%NOTFOUND THEN
+      RAISE_NO_DATA_FOUND;
+
+
+    ELSIF (v_feature.last_record<>1) THEN /*Общая проверка*/
+    
+      RAISE_NOT_APPROPRIATE_STATUS;
+    
+    ELSIF (v_feature.linked<>1 AND v_feature.status_id=4 /*Approved*/)  /*Проверка для Feature*/
+    
     /* **********************************************
      ////////////////////////////////////////////////
      ********************************************** */
@@ -55,8 +62,10 @@ PACKAGE BODY PKG_FEATURE AS
     /* **********************************************
      THE PLACE FOR EXCEPTIONS
      ********************************************** */
-    WHEN NO_DATA_FOUND THEN
-      RAISE_APPLICATION_ERROR(1/* ERROR CODE */,1/* ERROR TEXT */);
+      WHEN NO_DATA_FOUND THEN
+        RAISE_NO_DATA_FOUND('Data not found');
+      WHEN NOT_APPROPRIATE_STATUS THEN  
+        RAISE_NOT_APPROPRIATE_STATUS(10001,'You are not able to use this system action with current status of the entity'); 
     /* **********************************************
      ////////////////////////////////////////////////
      ********************************************** */
@@ -64,7 +73,7 @@ PACKAGE BODY PKG_FEATURE AS
 
   PROCEDURE p_amend(ip_feature IN T_FEATURE) AS
   v_feature T_FEATURE;
-	v_state   T_STATE;
+  v_state   T_STATE;
   BEGIN
     SELECT T_FEATURE(FEATURE.feature_id,
                      FEATURE.group_id,
@@ -96,11 +105,11 @@ PACKAGE BODY PKG_FEATURE AS
       RAISE_NO_DATA_FOUND;
 
 
-    ELSIF (v_feature.last_record<>1) THEN	/*Общая проверка*/
+    ELSIF (v_feature.last_record<>1) THEN /*Общая проверка*/
     
       RAISE_NOT_APPROPRIATE_STATUS;
     
-    ELSIF (v_feature.linked<>1 AND v_feature.status_id=4 /*Approved*/)	/*Проверка для Feature*/
+    ELSIF (v_feature.linked<>1 AND v_feature.status_id=4 /*Approved*/)  /*Проверка для Feature*/
     
       RAISE_EXC_LINKED_FEATURE;
     END IF;
@@ -110,10 +119,10 @@ PACKAGE BODY PKG_FEATURE AS
     EXCEPTION
       WHEN NO_DATA_FOUND THEN
         RAISE_NO_DATA_FOUND('Data not found');
-      WHEN NOT_APPROPRIATE_STATUS THEN	
-        RAISE_NOT_APPROPRIATE_STATUS(10001,'You are not able to use this system action with current status of the entity');	
-      WHEN EXC_LINKED_FEATURE THEN	
-         RAISE_EXC_LINKED_FEATURE(10002,'You are not able to amend or refuse this feature: it is linked to a product at the moment');	
+      WHEN NOT_APPROPRIATE_STATUS THEN  
+        RAISE_NOT_APPROPRIATE_STATUS(10001,'You are not able to use this system action with current status of the entity'); 
+      WHEN EXC_LINKED_FEATURE THEN  
+         RAISE_EXC_LINKED_FEATURE(10002,'You are not able to amend or refuse this feature: it is linked to a product at the moment'); 
       
 
 
@@ -157,22 +166,22 @@ PACKAGE BODY PKG_FEATURE AS
     UPDATE FEATURE
        SET FEATURE.last_record = 0
      WHERE FEATURE.feature_id = ip_feature.feature_id;
-	 
+   
   EXCEPTION
-	/* **********************************************
-	 THE PLACE FOR EXCEPTIONS
-	 ********************************************** */
-	WHEN NO_DATA_FOUND THEN
-		RAISE_APPLICATION_ERROR(1/* ERROR CODE */,'NO_DATA_FOUND'/* ERROR TEXT */);
-	/* **********************************************
-	 ////////////////////////////////////////////////
-	 ********************************************** */
+  /* **********************************************
+   THE PLACE FOR EXCEPTIONS
+   ********************************************** */
+  WHEN NO_DATA_FOUND THEN
+    RAISE_APPLICATION_ERROR(1/* ERROR CODE */,'NO_DATA_FOUND'/* ERROR TEXT */);
+  /* **********************************************
+   ////////////////////////////////////////////////
+   ********************************************** */
   END p_amend;
 
   PROCEDURE p_approve(ip_feature IN T_FEATURE) AS
   v_feature              T_FEATURE;
-	v_state                T_STATE;
-	v_id_of_last_published NUMBER;
+  v_state                T_STATE;
+  v_id_of_last_published NUMBER;
   BEGIN
     SELECT T_FEATURE(FEATURE.feature_id,
                      FEATURE.group_id,
@@ -267,21 +276,21 @@ PACKAGE BODY PKG_FEATURE AS
     END IF;
      
   EXCEPTION
-	/* **********************************************
-	 THE PLACE FOR EXCEPTIONS
-	 ********************************************** */
-	WHEN NO_DATA_FOUND THEN
-		RAISE_APPLICATION_ERROR(1/* ERROR CODE */,'NO_DATA_FOUND'/* ERROR TEXT */);
-	/* **********************************************
-	 ////////////////////////////////////////////////
-	 ********************************************** */
+  /* **********************************************
+   THE PLACE FOR EXCEPTIONS
+   ********************************************** */
+  WHEN NO_DATA_FOUND THEN
+    RAISE_APPLICATION_ERROR(1/* ERROR CODE */,'NO_DATA_FOUND'/* ERROR TEXT */);
+  /* **********************************************
+   ////////////////////////////////////////////////
+   ********************************************** */
   END p_approve;
 
   PROCEDURE p_reject(ip_feature IN T_FEATURE) AS
   v_feature                    T_FEATURE;
-	v_state                      T_STATE;
-	RETURN_TO_THE_LAST_PUBLISHED BOOLEAN DEFAULT FALSE;
-	v_id_of_last_published       NUMBER;
+  v_state                      T_STATE;
+  RETURN_TO_THE_LAST_PUBLISHED BOOLEAN DEFAULT FALSE;
+  v_id_of_last_published       NUMBER;
   BEGIN
     SELECT T_FEATURE(FEATURE.feature_id,
                      FEATURE.group_id,
@@ -403,9 +412,9 @@ PACKAGE BODY PKG_FEATURE AS
 
   PROCEDURE p_discard(ip_feature IN T_FEATURE) AS
   v_feature                    T_FEATURE;
-	v_state                      T_STATE;
-	RETURN_TO_THE_LAST_PUBLISHED BOOLEAN DEFAULT FALSE;
-	v_id_of_last_published       NUMBER;
+  v_state                      T_STATE;
+  RETURN_TO_THE_LAST_PUBLISHED BOOLEAN DEFAULT FALSE;
+  v_id_of_last_published       NUMBER;
   BEGIN
     SELECT T_FEATURE(FEATURE.feature_id,
                      FEATURE.group_id,
@@ -533,7 +542,7 @@ PACKAGE BODY PKG_FEATURE AS
 
   PROCEDURE p_deactivate(ip_feature IN T_FEATURE) AS
   v_feature T_FEATURE;
-	v_state   T_STATE;
+  v_state   T_STATE;
   BEGIN
     SELECT T_FEATURE(FEATURE.feature_id,
                      FEATURE.group_id,
