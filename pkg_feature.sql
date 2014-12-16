@@ -98,22 +98,22 @@ PACKAGE BODY PKG_FEATURE AS
 
     ELSIF (v_feature.last_record<>1) THEN	/*Общая проверка*/
     
-      RAISE_NOT_APPROPRIATE_STATUS(10001,'NOT_APPROPRIATE_STATUS');
+      RAISE_NOT_APPROPRIATE_STATUS;
     
     ELSIF (v_feature.linked<>1 AND v_feature.status_id=4 /*Approved*/)	/*Проверка для Feature*/
     
-      RAISE_EXC_LINKED_FEATURE(10002,'EXC_LINKED_FEATURE');
+      RAISE_EXC_LINKED_FEATURE;
     END IF;
     
     
     
     EXCEPTION
       WHEN NO_DATA_FOUND THEN
-        DBMS_OUTPUT.PUT_LINE('Data not found');
+        RAISE_NO_DATA_FOUND('Data not found');
       WHEN NOT_APPROPRIATE_STATUS THEN	
-        DBMS_OUTPUT.PUT_LINE('You are not able to use this system action with current status of the entity');	
+        RAISE_NOT_APPROPRIATE_STATUS(10001,'You are not able to use this system action with current status of the entity');	
       WHEN EXC_LINKED_FEATURE THEN	
-        DBMS_OUTPUT.PUT_LINE('You are not able to amend or refuse this feature: it is linked to a product at the moment');	
+         RAISE_EXC_LINKED_FEATURE(10002,'You are not able to amend or refuse this feature: it is linked to a product at the moment');	
       
 
 
