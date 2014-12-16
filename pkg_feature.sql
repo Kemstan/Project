@@ -96,7 +96,7 @@ PACKAGE BODY PKG_FEATURE AS
       RAISE_NO_DATA_FOUND;
 
 
-    ELSIF (v_Feature.last_record<>1) THEN	/*Общая проверка*/
+    ELSIF (v_feature.last_record<>1) THEN	/*Общая проверка*/
     
       RAISE_NOT_APPROPRIATE_STATUS(10001,'NOT_APPROPRIATE_STATUS');
     
@@ -204,7 +204,7 @@ PACKAGE BODY PKG_FEATURE AS
       RAISE_NO_DATA_FOUND;
 
 
-    ELSIF (v_Feature.last_record<>1) THEN 
+    ELSIF (v_feature.last_record<>1) THEN 
 
       RAISE_NOT_APPROPRIATE_STATUS(10001,'NOT_APPROPRIATE_STATUS');
 
@@ -313,7 +313,7 @@ PACKAGE BODY PKG_FEATURE AS
       RAISE_NO_DATA_FOUND;
 
 
-  ELSIF (v_Feature.last_record<>1) THEN 
+  ELSIF (v_feature.last_record<>1) THEN 
 
     RAISE_NOT_APPROPRIATE_STATUS(10001,'NOT_APPROPRIATE_STATUS');
 
@@ -437,7 +437,7 @@ PACKAGE BODY PKG_FEATURE AS
       RAISE_NO_DATA_FOUND;
 
 
-  ELSIF (v_Feature.last_record<>1) THEN 
+  ELSIF (v_feature.last_record<>1) THEN 
 
     RAISE_NOT_APPROPRIATE_STATUS(10001,'NOT_APPROPRIATE_STATUS');
 
@@ -564,7 +564,7 @@ PACKAGE BODY PKG_FEATURE AS
       RAISE_NO_DATA_FOUND;
 
 
-  ELSIF (v_Feature.last_record<>1) THEN 
+  ELSIF (v_feature.last_record<>1) THEN 
 
     RAISE_NOT_APPROPRIATE_STATUS(10001,'NOT_APPROPRIATE_STATUS');
 
@@ -663,7 +663,7 @@ PACKAGE BODY PKG_FEATURE AS
       RAISE_NO_DATA_FOUND;
 
 
-    ELSIF (v_Feature.last_record<>1) THEN 
+    ELSIF (v_feature.last_record<>1) THEN 
 
       RAISE_NOT_APPROPRIATE_STATUS(10001,'NOT_APPROPRIATE_STATUS');
 
